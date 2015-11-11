@@ -14,6 +14,12 @@ describe('Airport', function(){
     takeOff = function() { airport.takeOff(plane); };
   });
 
+  describe('when creating a new airport', function() {
+    it('can receive a default capacity', function() {
+
+    });
+  });
+
   describe('landing', function(){
     // As an air traffic controller
     // So planes can land safely at my airport
@@ -44,7 +50,10 @@ describe('Airport', function(){
       airport.takeOff(plane);
       expect(airport.planes()).not.toContain(plane);
     });
-
+ 
+    //As an air traffic controller
+    //So that I can ensure safe take off procedures
+    //I want planes only to take off from the airport they are at
     it('cannot take off if not at airport', function(){
       expect(takeOff).toThrowError('Plane not at airport');
     });

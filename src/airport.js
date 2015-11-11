@@ -18,6 +18,7 @@ Airport.prototype.land = function(plane) {
 };
 
 Airport.prototype.takeOff = function(plane){
+  if(this.planes().indexOf(plane) === -1) { throw new Error('Plane not at airport')}
   if(this.weather.isStormy()) {throw new Error('Weather is stormy'); }
   this._hangar.splice(this._hangar.indexOf(plane), 1);
 };
