@@ -2,16 +2,16 @@ describe('Airport', function(){
   var airport;
   var plane;
   var land;
-  var takeoff;
+  var takeOff;
 
   beforeEach(function(){
-    airport = new Airport();
+    weather = { isStormy: function() {} };
+    spyOn(weather, 'isStormy').and.returnValue(false);
+    airport = new Airport(weather);
     plane = 'plane';
     airport._hangar = [];
     land = function() { airport.land(plane); };
-    takeoff = function() { airport.takeOff(plane); };
-    weather = { isStormy: function() {} };
-    spyOn(weather, 'isStormy').and.returnValue(false);
+    takeOff = function() { airport.takeOff(plane); };
   });
 
   describe('landing', function(){
@@ -33,9 +33,9 @@ describe('Airport', function(){
     });
 
   });
-  
+
   describe('takeoff', function() {
- 
+
     //   As an air traffic controller
     //  So planes can take off safely from my airport
     // I would like to instruct a plane to take off
@@ -45,6 +45,10 @@ describe('Airport', function(){
       expect(airport.planes()).not.toContain(plane);
     });
 
+    it('cannot take off if not at airport', function(){
+      expect(takeOff).toThrowError('Plane not at airport');
+    });
+
   });
 
   describe('stormy weather', function(){
@@ -52,14 +56,15 @@ describe('Airport', function(){
     //So that I can avoid accidents
     //I want to prevent airplanes landing or taking off when the weather is
     //stormy
-    it('cannot land a plane', function(){ 
+    it('cannot land a plane', function(){
+      weather.isStormy.and.returnValue(true);
       expect(land).toThrowError('Weather is stormy');
     });
 
     it('cannot takeoff', function(){
       airport.land(plane);
       weather.isStormy.and.returnValue(true);
-      expect(takeoff).toThrowError('Weather is stormy');
+      expect(takeOff).toThrowError('Weather is stormy');
     });
   });
 });
