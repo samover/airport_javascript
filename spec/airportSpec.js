@@ -3,22 +3,40 @@ describe('Airport', function(){
   var plane;
   var land;
   var takeOff;
+  var def_capacity;
 
   beforeEach(function(){
     weather = { isStormy: function() {} };
+    plane = { land: function() {}, takeOff: function() {} };
+
     spyOn(weather, 'isStormy').and.returnValue(false);
-    airport = new Airport(weather);
-    plane = 'plane';
+
+    airport = new Airport({weather: weather});
     airport._hangar = [];
+    def_capacity = airport.DEF_CAPACITY;
+
     land = function() { airport.land(plane); };
     takeOff = function() { airport.takeOff(plane); };
   });
 
   describe('when creating a new airport', function() {
-    it('can receive a default capacity', function() {
+    
+    // As a system designer
+    // So that I have a airport template
+    // I would like airports to have a default capacity
+    it('has a default capacity', function() {
+     expect(airport.capacity) .toEqual(def_capacity);
+    });
 
+    // As a system designer
+    // So that the software can be used for different airports
+    // I would like a default capacity that can be overridden
+    it('has a settable capacity', function() {
+      airport = new Airport({capacity: 20});
+      expect(airport.capacity).toEqual(20);
     });
   });
+
 
   describe('landing', function(){
     // As an air traffic controller
@@ -42,22 +60,21 @@ describe('Airport', function(){
 
   describe('takeoff', function() {
 
-    //   As an air traffic controller
-    //  So planes can take off safely from my airport
+    // As an air traffic controller
+    // So planes can take off safely from my airport
     // I would like to instruct a plane to take off
     it('can tell a plane to takeoff', function(){
       airport.land(plane);
       airport.takeOff(plane);
       expect(airport.planes()).not.toContain(plane);
     });
- 
+
     //As an air traffic controller
     //So that I can ensure safe take off procedures
     //I want planes only to take off from the airport they are at
     it('cannot take off if not at airport', function(){
       expect(takeOff).toThrowError('Plane not at airport');
     });
-
   });
 
   describe('stormy weather', function(){
@@ -70,6 +87,9 @@ describe('Airport', function(){
       expect(land).toThrowError('Weather is stormy');
     });
 
+    // As an air traffic controller
+    // So taht I can avoid accidents
+    // I want to prevent airplanes from landing when weather is stormy
     it('cannot takeoff', function(){
       airport.land(plane);
       weather.isStormy.and.returnValue(true);
