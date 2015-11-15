@@ -11,16 +11,16 @@ describe('daily functioning of an airport', function() {
 
   beforeEach(function() {
     planes = [];
-    airport = new Airport(capacity: 15, weather: new Weather());
+    airport = new Airport({capacity: 15, weather: new Weather()});
     for(i = 0; i < 10; i++) {
       planes.push(new Plane());
     }
   });
 
-  it('lands 10 planes', function() {
+  it('lands 10 planes and lets them take off again', function() {
 
     planes.forEach(function(plane) {
-      while(plane.isLanded() === false) {
+      while(plane._isLanded() === false) {
         try {
           airport.land(plane);
         }
@@ -31,5 +31,19 @@ describe('daily functioning of an airport', function() {
     });
 
     expect(airport.planes().length).toEqual(10);
+    expect(airport.planes()).toEqual(planes);
+
+    planes.forEach(function(plane) {
+      while(plane._isLanded() === true) {
+        try {
+          airport.takeOff(plane);
+        }
+        catch(err) {
+          console.log(err.message);
+        }
+      }
+    });
+
+    expect(airport.planes().length).toEqual(0);
   });
 });

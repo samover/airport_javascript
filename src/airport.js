@@ -1,10 +1,10 @@
 function Airport(options) {
+  options = options === undefined ? {} : options;
   this.DEF_CAPACITY = 10;
   this._hangar = [];
-  this.capacity = typeof options.capacity !== 'undefined' ? options.capacity : 
-                                                            this.DEF_CAPACITY;
-  this.weather = typeof options.weather !== 'undefined' ? options.weather : 
-                                                          new Weather();
+  this.errorMsg = '';
+  this.capacity = options.capacity === undefined ? this.DEF_CAPACITY : options.capacity;
+  this.weather = options.weather === undefined ? new Weather() : options.weather;
 }
 
 Airport.prototype.planes = function(){
@@ -12,15 +12,43 @@ Airport.prototype.planes = function(){
 };
 
 Airport.prototype.land = function(plane) {
-  if(this.planes().length >= this.capacity) { throw new Error('Airport is full'); }
-  if(this.weather.isStormy()) {throw new Error('Weather is stormy'); }
+  if( this._errWeather() ||
+      this._errFull()) { throw new Error(this.errorMsg); }
   plane.land(this);
   this._hangar.push(plane);
 };
 
 Airport.prototype.takeOff = function(plane){
-  if(this.planes().indexOf(plane) === -1) { throw new Error('Plane not at airport');}
-  if(this.weather.isStormy()) {throw new Error('Weather is stormy'); }
-  plane.takeOff(this);
+  if( this._errWeather() ||
+      this._errNotPresent(plane)) { throw new Error(this.errorMsg); }
+  plane.takeOff();
   this._hangar.splice(this._hangar.indexOf(plane), 1);
+};
+
+Airport.prototype._errWeather = function() {
+  this.errorMsg = this.weather.isStormy() ? 'Weather is stormy' : '';
+  var retVal = this.errorMsg === '' ? false : true;
+  return retVal;
+};
+
+Airport.prototype._errFull = function() {
+  this.errorMsg =  this._isFull() ? 'Airport is full' : '';
+  var retVal = this.errorMsg === '' ? false : true;
+  return retVal;
+};
+
+Airport.prototype._errNotPresent = function(plane) {
+  this.errorMsg = this._isNotPresent(plane) ? 'Plane not at airport' : '';
+  var retVal = this.errorMsg === '' ? false : true;
+  return retVal;
+};
+
+Airport.prototype._isFull = function() {
+  var retVal = this.planes().length >= this.capacity ? true : false;
+  return retVal;
+};
+
+Airport.prototype._isNotPresent = function(plane) {
+  var retVal = this.planes().indexOf(plane) === -1 ? true : false;
+  return retVal;
 };

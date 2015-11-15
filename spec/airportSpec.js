@@ -20,7 +20,7 @@ describe('Airport', function(){
   });
 
   describe('when creating a new airport', function() {
-    
+
     // As a system designer
     // So that I have a airport template
     // I would like airports to have a default capacity
@@ -75,6 +75,11 @@ describe('Airport', function(){
     it('cannot take off if not at airport', function(){
       expect(takeOff).toThrowError('Plane not at airport');
     });
+
+    // As an air traffic controller
+    // So the system is consistent and correctly reports plane status and location
+    // I want to ensure a flying plane cannot take off
+
   });
 
   describe('stormy weather', function(){
