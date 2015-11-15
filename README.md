@@ -4,7 +4,7 @@ This is a javascript version of the [Ruby challenge](https://github.com/samover/
 
 This project follows the main principles of extreme programming taught at Makers Academy:
 
-* Listening to the client ([User stories](#user_stories))
+* Listening to the client ([User stories](#user-stories))
 * Pair programming
 * Test Driven Development: with a focus on unit tests, given that this app has only the business logic
 * Simplicity of design: the design emerges from the testing
