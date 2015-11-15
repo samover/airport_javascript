@@ -12,6 +12,22 @@ This project follows the main principles of extreme programming taught at Makers
   * OOP
   * SRP
 
+Files in project
+----------------
+```sh
+├── README.md
+├── SpecRunner.html
+├── spec
+│   ├── airportSpec.js
+│   ├── featureSpec.js
+│   ├── planeSpec.js
+│   └── weatherSpec.js
+└── src
+    ├── airport.js
+    ├── plane.js
+    └── weather.js
+```
+
 User Stories
 ------------
 
